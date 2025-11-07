@@ -149,7 +149,7 @@ const Databases = props => {
   }
 
   const handleEdit = () => {
-    props.history.push(`/edit/database?domain=${controlPanelFocusedElement}`);
+    props.navigate(`/edit/database?domain=${controlPanelFocusedElement}`);
   }
 
   const handleSuspend = () => {

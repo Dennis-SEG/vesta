@@ -7,19 +7,19 @@ import AddItemLayout from '../../ControlPanel/AddItemLayout/AddItemLayout';
 import { addFirewall } from '../../../ControlPanelService/Firewalls';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Toolbar from '../../MainNav/Toolbar/Toolbar';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './AddFirewall.scss';
 import { Helmet } from 'react-helmet';
 import { refreshCounters } from 'src/actions/MenuCounters/menuCounterActions';
-import HtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 
 const AddFirewall = props => {
   const token = localStorage.getItem("token");
   const { i18n } = useSelector(state => state.session);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, setState] = useState({
     loading: false,
     actions: [
@@ -84,7 +84,7 @@ const AddFirewall = props => {
         <div className="success">
           <span className="ok-message">
             {state.okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''}
-            <span>{HtmlParser(state.okMessage)}</span>
+            <span>{parse(state.okMessage)}</span>
           </span>
         </div>
       </Toolbar>
@@ -125,7 +125,7 @@ const AddFirewall = props => {
 
           <div className="buttons-wrapper">
             <button type="submit" className="add">{i18n.Add}</button>
-            <button type="button" className="back" onClick={() => history.push('/list/firewall/')}>{i18n.Back}</button>
+            <button type="button" className="back" onClick={() => navigate('/list/firewall/')}>{i18n.Back}</button>
           </div>
         </form>
       </AddItemLayout>

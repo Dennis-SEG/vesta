@@ -8,7 +8,7 @@ import AdvancedOptions from './AdvancedOptions/AdvancedOptions';
 import Checkbox from 'src/components/ControlPanel/AddItemLayout/Form/Checkbox/Checkbox';
 import TextArea from 'src/components/ControlPanel/AddItemLayout/Form/TextArea/TextArea';
 import Toolbar from '../../MainNav/Toolbar/Toolbar';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Spinner from '../../Spinner/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -17,7 +17,7 @@ import GenerateSSL from 'src/containers/GenerateCSR';
 import 'src/components/Modal/Modal.scss';
 import { Helmet } from 'react-helmet';
 import { refreshCounters } from 'src/actions/MenuCounters/menuCounterActions';
-import HtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 
 const AddWebDomain = props => {
   const { i18n, userName } = useSelector(state => state.session);
@@ -26,7 +26,7 @@ const AddWebDomain = props => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const [modalVisible, setModalVisible] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, setState] = useState({
     loading: false,
     dnsSupport: true,
@@ -152,7 +152,7 @@ const AddWebDomain = props => {
         <div className="success">
           <span className="ok-message">
             {state.okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''}
-            <span>{HtmlParser(state.okMessage)}</span>
+            <span>{parse(state.okMessage)}</span>
           </span>
         </div>
       </Toolbar>
@@ -247,7 +247,7 @@ const AddWebDomain = props => {
 
             <div className="buttons-wrapper">
               <button type="submit" className="add">{i18n.Add}</button>
-              <button type="button" className="back" onClick={() => history.push('/list/web/')}>{i18n.Back}</button>
+              <button type="button" className="back" onClick={() => navigate('/list/web/')}>{i18n.Back}</button>
             </div>
           </form>
         )}
@@ -257,7 +257,7 @@ const AddWebDomain = props => {
           <div className="modal-content">
             <div className="modal-header">
               <h5>{i18n['Generating CSR']}</h5>
-              <button type="button" onClick={() => setModalVisible(false)} className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" onClick={() => setModalVisible(false)} className="close" data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>

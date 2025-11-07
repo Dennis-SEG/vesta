@@ -6,19 +6,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { addCronJob } from '../../../ControlPanelService/Cron';
 import Toolbar from '../../MainNav/Toolbar/Toolbar';
 import Generator from '../Generator/Generator';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Spinner from '../../Spinner/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './AddCronJob.scss';
 import { Helmet } from 'react-helmet';
 import { refreshCounters } from 'src/actions/MenuCounters/menuCounterActions';
-import HtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 
 const AddCronJob = props => {
   const { i18n } = useSelector(state => state.session);
   const token = localStorage.getItem("token");
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [state, setState] = useState({
     loading: false,
@@ -101,7 +101,7 @@ const AddCronJob = props => {
         <div className="success">
           <span className="ok-message">
             {state.okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''}
-            <span>{HtmlParser(state.okMessage)}</span>
+            <span>{parse(state.okMessage)}</span>
           </span>
         </div>
       </Toolbar>
@@ -187,7 +187,7 @@ const AddCronJob = props => {
 
             <div className="buttons-wrapper">
               <button type="submit" className="add">{i18n.Add ?? 'Add'}</button>
-              <button type="button" className="back" onClick={() => history.push('/list/cron/')}>{i18n.Back ?? 'Back'}</button>
+              <button type="button" className="back" onClick={() => navigate('/list/cron/')}>{i18n.Back ?? 'Back'}</button>
             </div>
           </form>
         )}

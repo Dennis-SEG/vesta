@@ -2,14 +2,14 @@ import QueryString from 'qs';
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DnsRecords from '../DNSRecords/DNSRecords';
 import DomainNameSystems from '../DomainNameSystems/DomainNameSystems';
 
 export default function DNSWrapper(props) {
   const { i18n } = useSelector(state => state.session);
-  const history = useHistory();
-  const parsedQueryString = QueryString.parse(history.location.search, { ignoreQueryPrefix: true });
+  const navigate = useNavigate();
+  const parsedQueryString = QueryString.parse(window.location.search, { ignoreQueryPrefix: true });
   const [isDnsRecords, setIsDnsRecords] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function DNSWrapper(props) {
     } else {
       setIsDnsRecords(false);
     }
-  }, [history.location]);
+  }, [window.location]);
 
   return (
     <>

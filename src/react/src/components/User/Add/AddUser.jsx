@@ -8,18 +8,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { addUser } from '../../../ControlPanelService/Users';
 import Spinner from '../../../components/Spinner/Spinner';
 import Toolbar from '../../MainNav/Toolbar/Toolbar';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './AddUser.scss';
 import { Helmet } from 'react-helmet';
 import { refreshCounters } from 'src/actions/MenuCounters/menuCounterActions';
-import HtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 
 const AddUser = props => {
   const { i18n } = useSelector(state => state.session);
   const { session } = useSelector(state => state.userSession);
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [state, setState] = useState({
     vEmail: '',
@@ -139,7 +139,7 @@ const AddUser = props => {
         <div className="search-toolbar-name">{i18n['Adding User']}</div>
         <div className="error"><span className="error-message">{state.errorMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} {state.errorMessage}</span></div>
         <div className="success">
-          <span className="ok-message">{state.okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} <span>{HtmlParser(state.okMessage)}</span> </span>
+          <span className="ok-message">{state.okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} <span>{parse(state.okMessage)}</span> </span>
         </div>
       </Toolbar>
       <AddItemLayout>
@@ -210,7 +210,7 @@ const AddUser = props => {
 
             <div className="buttons-wrapper">
               <button type="submit" className="add">{i18n.Add}</button>
-              <button type="button" className="back" onClick={() => history.push('/list/user/')}>{i18n.Back}</button>
+              <button type="button" className="back" onClick={() => navigate('/list/user/')}>{i18n.Back}</button>
             </div>
 
           </form>

@@ -161,7 +161,7 @@ const Statistics = props => {
 
   const bulkAction = value => {
     let user = value !== '' ? `?user=${value}` : '';
-    props.history.push({ search: user });
+    props.navigate({ search: user });
     fetchData();
   };
 

@@ -5,7 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import Hotkeys from '../../components/Hotkeys/Hotkeys';
 import Modal from '../../components/Modal/Modal';
 import 'react-toastify/dist/ReactToastify.css';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from '../../utils/withRouter';
 import Menu from '../../components/Menu/Menu';
 import * as FM from '../../FileManagerHelper';
 import axios from 'axios';
@@ -44,7 +44,7 @@ class FileManager extends Component {
   }
 
   UNSAFE_componentWillMount = () => {
-    if (!this.props.session.userName) return this.props.history.push('/login');
+    if (!this.props.session.userName) return this.props.navigate('/login');
 
     FM.cacheData(this.state.currentUser, this.props.history, this.props.menuCounters.user.HOME);
     let currentPath = FM.activeWindowPath();
@@ -318,7 +318,7 @@ class FileManager extends Component {
   }
 
   changeQuery = (path) => {
-    this.props.history.push({
+    this.props.navigate({
       pathname: '/list/directory/',
       search: `?path=${path}`
     });
@@ -344,7 +344,7 @@ class FileManager extends Component {
     let list = { ...this.state[`${activeWindow}List`] };
     list.path = list.path.substring(0, list.path.lastIndexOf('/'));
     this.setState({ [`${activeWindow}List`]: list, currentPath: list.path });
-    this.props.history.push({ search: `?path=${list.path}` })
+    this.props.navigate({ search: `?path=${list.path}` })
     this.openDirectory();
   }
 

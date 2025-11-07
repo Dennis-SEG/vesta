@@ -14,19 +14,19 @@ import EditDatabaseOption from './EditDatabaseOption';
 import Toolbar from '../../MainNav/Toolbar/Toolbar';
 import EditBackupOption from './EditBackupOption';
 import EditMailOption from './EditMailOption';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './EditServer.scss';
 import { Helmet } from 'react-helmet';
-import HtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 import { refreshUserSession } from 'src/actions/Session/sessionActions';
 
 const EditServer = props => {
   const token = localStorage.getItem("token");
   const { i18n } = useSelector(state => state.session);
   const { session } = useSelector(state => state.userSession);
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState('');
   const [okMessage, setOkMessage] = useState('');
@@ -128,7 +128,7 @@ const EditServer = props => {
         </div>
         <div className="success">
           <span className="ok-message">
-            {okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} <span>{HtmlParser(okMessage)}</span>
+            {okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} <span>{parse(okMessage)}</span>
           </span>
         </div>
       </Toolbar>
@@ -229,7 +229,7 @@ const EditServer = props => {
 
             <div className="buttons-wrapper">
               <button type="submit" className="add">{i18n.Save}</button>
-              <button type="button" className="back" onClick={() => history.push('/list/server/')}>{i18n.Back}</button>
+              <button type="button" className="back" onClick={() => navigate('/list/server/')}>{i18n.Back}</button>
             </div>
 
           </form>

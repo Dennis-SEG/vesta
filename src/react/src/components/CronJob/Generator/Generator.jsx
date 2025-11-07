@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import RunCommandSelect from './RunCommandSelect/RunCommandSelect';
 import SelectsWrapper from './OtherSelects/SelectsWrapper';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import QS from 'qs';
 
 import './Generator.scss';
@@ -11,17 +11,17 @@ import { useSelector } from 'react-redux';
 const Generator = props => {
   const formElement = useRef(null);
   const { i18n } = useSelector(state => state.session);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, setState] = useState({
     activeTab: '1'
   });
 
   useEffect(() => {
-    let parsedQuery = QS.parse(history.location.search, { ignoreQueryPrefix: true });
+    let parsedQuery = QS.parse(window.location.search, { ignoreQueryPrefix: true });
     let activeTab = parsedQuery.activeTab || '1';
 
     setState({ ...state, activeTab });
-  }, [history.location.search]);
+  }, [window.location.search]);
 
   const activeClassName = tab => {
     return state.activeTab === tab ? 'active' : '';

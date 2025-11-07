@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from '../../../utils/withRouter';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faJs, faCss3, faPhp, faHtml5, faSass } from '@fortawesome/free-brands-svg-icons';
@@ -66,7 +66,7 @@ class Row extends Component {
   }
 
   changePath = (path, name) => {
-    this.props.history.push({
+    this.props.navigate({
       pathname: '/list/directory/preview/',
       search: `?path=${path}/${name}`
     });

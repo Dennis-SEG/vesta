@@ -12,7 +12,7 @@ import Modal from 'src/components/ControlPanel/Modal/Modal';
 import DnsRecord from 'src/components/DNSRecord/DNSRecord';
 import { useSelector, useDispatch } from 'react-redux';
 import Spinner from '../../components/Spinner/Spinner';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import QueryString from 'qs';
 
 import './DNSRecords.scss';
@@ -24,7 +24,7 @@ export default function DnsRecords(props) {
   const { controlPanelFocusedElement } = useSelector(state => state.controlPanelContent);
   const { focusedElement } = useSelector(state => state.mainNavigation);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState({
     text: '',
@@ -144,7 +144,7 @@ export default function DnsRecords(props) {
   }
 
   const handleEdit = () => {
-    props.history.push(`/edit/dns/?domain=${controlPanelFocusedElement}`);
+    props.navigate(`/edit/dns/?domain=${controlPanelFocusedElement}`);
   }
 
   const handleDelete = () => {
@@ -155,7 +155,7 @@ export default function DnsRecords(props) {
   }
 
   const fetchData = () => {
-    let parsedQueryString = QueryString.parse(history.location.search, { ignoreQueryPrefix: true });
+    let parsedQueryString = QueryString.parse(window.location.search, { ignoreQueryPrefix: true });
     setLoading(true);
     return new Promise((resolve, reject) => {
       getDNSRecordsList(parsedQueryString.domain || '')

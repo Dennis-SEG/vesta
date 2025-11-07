@@ -9,13 +9,13 @@ import 'codemirror/mode/css/css';
 import 'codemirror/mode/htmlmixed/htmlmixed';
 import axios from 'axios';
 import Spinner from '../../Spinner/Spinner';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
 const Editor = ({ close, name }) => {
   const { i18n } = useSelector(state => state.session);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, setState] = useState({
     code: '',
     loading: false
@@ -24,7 +24,7 @@ const Editor = ({ close, name }) => {
   useEffect(() => {
     document.addEventListener("keydown", hotKey);
 
-    let path = `${history.location.search.substring(6, history.location.search.lastIndexOf('/'))}/${name}`;
+    let path = `${window.location.search.substring(6, window.location.search.lastIndexOf('/'))}/${name}`;
     setState({ ...state, loading: true });
 
     checkFileType(path)
@@ -66,7 +66,7 @@ const Editor = ({ close, name }) => {
 
   const save = () => {
     let formData = new FormData();
-    let path = history.location.search.substring(6, history.location.search.lastIndexOf('/'));
+    let path = window.location.search.substring(6, window.location.search.lastIndexOf('/'));
 
     formData.append('save', 'Save');
     formData.append('contents', state.code);

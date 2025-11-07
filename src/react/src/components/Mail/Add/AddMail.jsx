@@ -5,20 +5,20 @@ import AddItemLayout from '../../ControlPanel/AddItemLayout/AddItemLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { addMail } from '../../../ControlPanelService/Mail';
 import Toolbar from '../../MainNav/Toolbar/Toolbar';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Spinner from '../../Spinner/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './AddMail.scss'
 import { Helmet } from 'react-helmet';
 import { refreshCounters } from 'src/actions/MenuCounters/menuCounterActions';
-import HtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 
 const AddMail = props => {
   const { i18n } = useSelector(state => state.session);
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, setState] = useState({
     loading: false,
     antiSpamChecked: true,
@@ -77,7 +77,7 @@ const AddMail = props => {
         <div className="success">
           <span className="ok-message">
             {state.okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''}
-            <span>{HtmlParser(state.okMessage)}</span>
+            <span>{parse(state.okMessage)}</span>
           </span>
         </div>
       </Toolbar>
@@ -130,7 +130,7 @@ const AddMail = props => {
 
             <div className="buttons-wrapper">
               <button type="submit" className="add">{i18n.Add}</button>
-              <button type="button" className="back" onClick={() => history.push('/list/mail/')}>{i18n.Back}</button>
+              <button type="button" className="back" onClick={() => navigate('/list/mail/')}>{i18n.Back}</button>
             </div>
           </form>
         )}

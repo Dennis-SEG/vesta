@@ -5,15 +5,15 @@ import { getBanIps, addBanIp } from 'src/ControlPanelService/Firewalls';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from 'src/components/Spinner/Spinner';
 import Toolbar from '../../../MainNav/Toolbar/Toolbar';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import HtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 
 const AddBanIP = () => {
   const { i18n } = useSelector(state => state.session);
   const userLanguage = localStorage.getItem("language");
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [state, setState] = useState({
     banIps: [],
@@ -78,7 +78,7 @@ const AddBanIP = () => {
         <div className="search-toolbar-name">{i18n['Adding IP Address to Banlist']}</div>
         <div className="error"><span className="error-message">{state.errorMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} {state.errorMessage}</span></div>
         <div className="success">
-          <span className="ok-message">{state.okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} <span>{HtmlParser(state.okMessage)}</span> </span>
+          <span className="ok-message">{state.okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} <span>{parse(state.okMessage)}</span> </span>
         </div>
       </Toolbar>
       <AddItemLayout>
@@ -108,7 +108,7 @@ const AddBanIP = () => {
 
             <div className="buttons-wrapper">
               <button type="submit" className="add">{i18n.Add}</button>
-              <button type="button" className="back" onClick={() => history.push('/list/firewall/banlist')}>{i18n.Back}</button>
+              <button type="button" className="back" onClick={() => navigate('/list/firewall/banlist')}>{i18n.Back}</button>
             </div>
 
           </form>

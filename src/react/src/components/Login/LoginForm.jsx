@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Spinner from '../Spinner/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../actions/Session/sessionActions';
@@ -13,7 +13,7 @@ import { Helmet } from 'react-helmet';
 export default function LoginForm() {
   const { i18n } = useSelector(state => state.session);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
     user: '',
@@ -29,7 +29,7 @@ export default function LoginForm() {
     }
 
     if (session.token && session.userName) {
-      history.push('/list/user/');
+      navigate('/list/user/');
     }
   }, [session]);
 

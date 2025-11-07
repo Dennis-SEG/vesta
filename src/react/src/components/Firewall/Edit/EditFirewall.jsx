@@ -7,18 +7,18 @@ import AddItemLayout from '../../ControlPanel/AddItemLayout/AddItemLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from '../../../components/Spinner/Spinner';
 import Toolbar from '../../MainNav/Toolbar/Toolbar';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import QS from 'qs';
 
 import './EditFirewall.scss';
 import { Helmet } from 'react-helmet';
-import HtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 
 const EditFirewall = props => {
   const token = localStorage.getItem("token");
   const { i18n } = useSelector(state => state.session);
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState('');
   const [okMessage, setOkMessage] = useState('');
@@ -28,7 +28,7 @@ const EditFirewall = props => {
   });
 
   useEffect(() => {
-    let queryParams = QS.parse(history.location.search, { ignoreQueryPrefix: true });
+    let queryParams = QS.parse(window.location.search, { ignoreQueryPrefix: true });
     const { rule } = queryParams;
 
     dispatch(addActiveElement('/list/firewall/'));
@@ -95,7 +95,7 @@ const EditFirewall = props => {
         </div>
         <div className="success">
           <span className="ok-message">
-            {okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} <span>{HtmlParser(okMessage)}</span>
+            {okMessage ? <FontAwesomeIcon icon="long-arrow-alt-right" /> : ''} <span>{parse(okMessage)}</span>
           </span>
         </div>
       </Toolbar>
@@ -149,7 +149,7 @@ const EditFirewall = props => {
 
             <div className="buttons-wrapper">
               <button type="submit" className="add">{i18n.Save}</button>
-              <button type="button" className="back" onClick={() => history.push('/list/firewall/')}>{i18n.Back}</button>
+              <button type="button" className="back" onClick={() => navigate('/list/firewall/')}>{i18n.Back}</button>
             </div>
 
           </form>

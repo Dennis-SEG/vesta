@@ -142,7 +142,7 @@ const Backups = props => {
   }
 
   const configureRestoreSettings = () => {
-    props.history.push(`/list/backup?backup=${controlPanelFocusedElement}`);
+    props.navigate(`/list/backup?backup=${controlPanelFocusedElement}`);
   }
 
   const download = () => {

@@ -149,15 +149,15 @@ const Mails = props => {
   }
 
   const handleAddRecord = () => {
-    props.history.push(`/add/mail/?domain=${controlPanelFocusedElement}`);
+    props.navigate(`/add/mail/?domain=${controlPanelFocusedElement}`);
   }
 
   const handleLogs = () => {
-    props.history.push(`/list/mail?domain=${controlPanelFocusedElement}&type=access`);
+    props.navigate(`/list/mail?domain=${controlPanelFocusedElement}&type=access`);
   }
 
   const handleEdit = () => {
-    props.history.push(`/edit/mail?domain=${controlPanelFocusedElement}`);
+    props.navigate(`/edit/mail?domain=${controlPanelFocusedElement}`);
   }
 
   const handleSuspend = () => {
