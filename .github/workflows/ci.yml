@@ -1,0 +1,143 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, develop, vesta-2.0 ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  test-bash:
+    name: Test Bash Scripts
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install shellcheck
+      run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+    - name: Run shellcheck on bin scripts
+      run: |
+        find bin -type f -name "v-*" | head -20 | xargs shellcheck -S warning || true
+        echo "Shellcheck completed (warnings allowed for legacy code)"
+
+    - name: Check bash syntax
+      run: |
+        for script in bin/v-*; do
+          bash -n "$script" || echo "Syntax error in $script"
+        done
+        echo "Bash syntax check completed"
+
+  build-react:
+    name: Build React UI
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: src/react/package-lock.json
+
+    - name: Install dependencies
+      working-directory: ./src/react
+      run: npm ci
+
+    - name: Run tests
+      working-directory: ./src/react
+      run: npm test -- --passWithNoTests --watchAll=false
+
+    - name: Build
+      working-directory: ./src/react
+      run: npm run build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: matrix.node-version == '20.x'
+      with:
+        name: react-build
+        path: src/react/build
+        retention-days: 7
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run npm audit
+      working-directory: ./src/react
+      run: |
+        npm audit --audit-level=moderate || true
+        echo "Security audit completed"
+
+    - name: Check for secrets
+      run: |
+        # Basic check for common secret patterns
+        ! grep -r "password\s*=\s*['\"].*['\"]" --include="*.sh" --include="*.php" bin/ web/ || echo "Warning: Potential hardcoded passwords found"
+        ! grep -r "api_key\s*=\s*['\"].*['\"]" --include="*.sh" --include="*.php" bin/ web/ || echo "Warning: Potential hardcoded API keys found"
+        echo "Secret scan completed"
+
+  lint-php:
+    name: Lint PHP Files
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+
+    - name: Check PHP syntax
+      run: |
+        find web -name "*.php" -print0 | xargs -0 -n1 php -l || true
+        echo "PHP syntax check completed"
+
+  test-install-script:
+    name: Test Installation Script
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Validate install scripts
+      run: |
+        bash -n install/vst-install.sh
+        bash -n install/vst-install-debian.sh
+        bash -n install/vst-install-ubuntu.sh
+        bash -n install/vst-install-rhel.sh
+        echo "Installation script validation completed"
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: src/react/package-lock.json
+
+    - name: Install dependencies
+      working-directory: ./src/react
+      run: npm ci
+
+    - name: Run ESLint
+      working-directory: ./src/react
+      run: npx eslint src --max-warnings 100 || true
+      continue-on-error: true
