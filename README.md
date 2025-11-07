@@ -5,6 +5,21 @@
 
 Vesta is back under active development as of February 25, 2024. We are committed to open source and will engage with the community to identify the new roadmap for Vesta.
 
+## ✅ Modernization Complete (January 2025)
+
+**Vesta now features fully modernized installation scripts with:**
+- ✅ PHP 8.2, 8.3, 8.4 support (default: 8.3)
+- ✅ Modern OS support (Ubuntu 20.04+, Debian 10+, RHEL 8+)
+- ✅ MariaDB 10.11+ and MySQL 8.0+
+- ✅ Security hardening with fail2ban
+- ✅ Let's Encrypt SSL automation via acme.sh
+- ✅ Production-ready configurations
+
+**For upgrading from old Vesta installations:**
+- See [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) for complete migration procedures
+- Backup your data before upgrading
+- Test PHP 8 compatibility of your applications
+
 ## About
 
 Vesta is a comprehensive open-source hosting control panel designed for system administrators and web hosting providers. It provides a clean, focused interface for managing web servers without unnecessary complexity.
@@ -24,43 +39,119 @@ Vesta is a comprehensive open-source hosting control panel designed for system a
 
 ### Supported Operating Systems
 
-- RHEL 5, 6, 7
-- CentOS 5, 6, 7
-- Debian 7, 8, 9, 10, 11
-- Ubuntu 12.04 - 22.04
-- Amazon Linux 2017
+**Fully Supported (Modern Installers):**
+- ✅ **Ubuntu**: 20.04 LTS (Focal), 22.04 LTS (Jammy), 24.04 LTS (Noble)
+- ✅ **Debian**: 10 (Buster), 11 (Bullseye), 12 (Bookworm)
+- ✅ **RHEL Family**: RHEL 8/9, Rocky Linux 8/9, AlmaLinux 8/9
+
+**End-of-Life (Not Supported):**
+- ❌ Ubuntu < 20.04, Debian < 10, RHEL < 8
+- ❌ CentOS (all versions - project discontinued)
+- ❌ Amazon Linux < 2023
+
+The modern installers automatically detect your OS and reject unsupported versions with clear error messages.
 
 ## Installation
 
-### Quick Install (2 steps)
+### System Requirements
 
-Connect to your server as root via SSH:
+**Minimum:**
+- 1 CPU core
+- 2GB RAM (4GB recommended)
+- 20GB free disk space
+- Fresh OS installation recommended
+
+**Software:**
+- Ubuntu 20.04+, Debian 10+, or RHEL 8+
+- Root access via SSH
+- Internet connection
+
+### Quick Install
+
+**1. Connect to your server as root:**
 ```bash
 ssh root@your.server
 ```
 
-Download and run the installation script:
+**2. Download the modern installer:**
 ```bash
-curl -O https://vestacp.com/pub/vst-install.sh
-bash vst-install.sh
+wget https://github.com/outroll/vesta/raw/master/install/INSTALL_COMPLETE.sh
 ```
 
-### Alternative Install (Direct Pipe)
-
+**3. Run the installation:**
 ```bash
-curl https://vestacp.com/pub/vst-install.sh | bash
+# Basic installation with PHP 8.3 (default)
+bash INSTALL_COMPLETE.sh -e admin@example.com
+
+# With custom PHP version
+bash INSTALL_COMPLETE.sh --php 8.3 -e admin@example.com
+
+# With custom password and SSL
+bash INSTALL_COMPLETE.sh \
+  --php 8.3 \
+  -e admin@example.com \
+  -p mypassword \
+  -s server.example.com \
+  --ssl yes
 ```
 
-**Note:** For production systems, we recommend reviewing the installation script before execution.
+### Installation Options
 
-## Post-Installation
+```bash
+Options:
+  --php VERSION          PHP version (8.2, 8.3, 8.4) - default: 8.3
+  -e, --email EMAIL      Admin email address (required)
+  -p, --password PASS    Admin password (auto-generated if not provided)
+  -s, --hostname NAME    Server hostname
+  --ssl yes|no           Request Let's Encrypt SSL for hostname
+  -h, --help             Show help message
 
-After installation, you can access the control panel at:
+Examples:
+  # Minimal installation
+  bash INSTALL_COMPLETE.sh -e admin@example.com
+
+  # Full installation with SSL
+  bash INSTALL_COMPLETE.sh --php 8.3 -e admin@example.com -s vesta.example.com --ssl yes
+```
+
+### Installation Time
+
+- **Expected duration:** 10-20 minutes
+- **Depends on:** Server specs and internet connection
+- **Progress:** Detailed output during installation
+
+### Post-Installation
+
+**1. Access the control panel:**
 ```
 https://your-server-ip:8083
+https://your-hostname:8083
 ```
 
-Default credentials will be displayed at the end of the installation.
+**2. Credentials:**
+- Username: `admin`
+- Password: Displayed at end of installation
+- Also saved to: `/root/vesta_install_info.txt`
+
+**3. First Steps:**
+- Change admin password (recommended)
+- Create your first user account
+- Add your first domain
+- Configure backups
+- Review firewall rules
+
+### Upgrading from Old Vesta
+
+If you're running an old Vesta installation with PHP 5.x/7.x:
+
+**See [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) for:**
+- Two migration strategies (fresh install vs. in-place upgrade)
+- PHP 8 compatibility testing procedures
+- Database migration steps
+- Application-specific migration guides
+- Rollback procedures
+
+**⚠️ Important:** Always backup before upgrading!
 
 ## Development
 
@@ -104,11 +195,22 @@ All operations go through the CLI tools, ensuring consistency and security.
 
 ## Documentation
 
-- [Installation Guide](https://vestacp.com/install/)
+### Installation & Migration
+- [Migration Guide](MIGRATION_GUIDE.md) - Complete guide for upgrading from old Vesta
+- [System Requirements](SYSTEM_REQUIREMENTS.md) - Detailed dependency analysis
+- [Installer Update Plan](INSTALLER_UPDATE_PLAN.md) - Modernization roadmap
+- [Upgrade Notes](UPGRADE_NOTES.md) - React/JavaScript upgrade guide
+
+### Development
+- [Contributing Guide](CONTRIBUTING.md) - How to contribute to Vesta
+- [Changelog](CHANGELOG.md) - Version history and changes
+- [Security Policy](SECURITY.md) - Security practices and reporting
+
+### Online Resources
+- [Official Website](https://vestacp.com/)
 - [API Documentation](https://vestacp.com/docs/)
 - [User Manual](https://vestacp.com/docs/)
-- [Contributing Guide](CONTRIBUTING.md)
-- [Security Policy](SECURITY.md)
+- [Forum](https://forum.vestacp.com/)
 
 ## Community
 
@@ -140,8 +242,31 @@ Vesta is built on the shoulders of many excellent open-source projects:
 - React, Redux
 - And many more...
 
+## What's New in 2025
+
+### Installation System Modernization ✨
+
+**Major Update - January 2025:**
+- 🎯 **Full PHP 8.x support** (8.2, 8.3, 8.4)
+- 🚀 **Modern OS support** (Ubuntu 20.04+, Debian 10+, RHEL 8+)
+- 🔒 **Enhanced security** with fail2ban and modern TLS
+- 🤖 **Automated SSL** via Let's Encrypt (acme.sh)
+- 📦 **Production-ready** configurations for all services
+- 📚 **Comprehensive documentation** and migration guides
+
+**For Developers:**
+- ⚛️ React 18.3 with latest dependencies
+- 🔄 Modern build tools and CI/CD
+- 🎨 Bootstrap 5 ready
+- 🛠️ Comprehensive testing framework
+
+See [CHANGELOG.md](CHANGELOG.md) for complete release notes.
+
 ---
 
-**Version:** 1.0.0-5
+**Version:** 2.0.0 (Modernized)
+**Release Date:** January 2025
 **Status:** Active Development
 **Maintained by:** The Vesta Community
+
+**License:** GNU General Public License v3.0

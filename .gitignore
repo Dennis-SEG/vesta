@@ -39,4 +39,5 @@ dist/
 # OS
 Thumbs.db
 .AppleDouble
-.LSOverride
+.LSOverride.claude/
+.claude/
