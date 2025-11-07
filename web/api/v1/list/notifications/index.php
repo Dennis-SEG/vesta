@@ -1,6 +1,6 @@
 <?php
 $TAB = 'NOTIFICATIONS';
-error_reporting(NULL);
+error_reporting(0);
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");

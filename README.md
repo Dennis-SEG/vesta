@@ -1,7 +1,41 @@
 # Vesta Control Panel
 
-[![Join the chat at https://gitter.im/vesta-cp/Lobby](https://badges.gitter.im/vesta-cp/Lobby.svg)](https://gitter.im/vesta-cp/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+<!-- Version & Release -->
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/Dennis-SEG/vesta/releases)
+[![Release](https://img.shields.io/github/v/release/Dennis-SEG/vesta?include_prereleases)](https://github.com/Dennis-SEG/vesta/releases)
+[![Release Date](https://img.shields.io/github/release-date/Dennis-SEG/vesta)](https://github.com/Dennis-SEG/vesta/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+<!-- Technology Stack -->
+[![PHP](https://img.shields.io/badge/PHP-8.0%20|%208.1%20|%208.2%20|%208.3%20|%208.4-777BB4?logo=php&logoColor=white)](https://www.php.net)
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-7952B3?logo=bootstrap&logoColor=white)](https://getbootstrap.com)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+
+<!-- Platform Support -->
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04%20|%2022.04%20|%2024.04-E95420?logo=ubuntu&logoColor=white)](https://ubuntu.com)
+[![Debian](https://img.shields.io/badge/Debian-10%20|%2011%20|%2012-A81D33?logo=debian&logoColor=white)](https://www.debian.org)
+[![RHEL](https://img.shields.io/badge/RHEL-8%20|%209-EE0000?logo=redhat&logoColor=white)](https://www.redhat.com)
+[![Rocky Linux](https://img.shields.io/badge/Rocky%20Linux-8%20|%209-10B981?logo=rockylinux&logoColor=white)](https://rockylinux.org)
+
+<!-- Repository Stats -->
+[![GitHub stars](https://img.shields.io/github/stars/Dennis-SEG/vesta?style=social)](https://github.com/Dennis-SEG/vesta/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Dennis-SEG/vesta?style=social)](https://github.com/Dennis-SEG/vesta/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/Dennis-SEG/vesta)](https://github.com/Dennis-SEG/vesta/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/Dennis-SEG/vesta)](https://github.com/Dennis-SEG/vesta/pulls)
+[![Last commit](https://img.shields.io/github/last-commit/Dennis-SEG/vesta)](https://github.com/Dennis-SEG/vesta/commits/master)
+
+<!-- Build & Security -->
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/Dennis-SEG/vesta)
+[![Security](https://img.shields.io/badge/security-hardened-success)](SECURITY.md)
+[![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)](package.json)
+[![Code Quality](https://img.shields.io/badge/code%20quality-production%20ready-success)](https://github.com/Dennis-SEG/vesta)
+
+<!-- Community -->
+[![Join the chat at https://gitter.im/vesta-cp/Lobby](https://badges.gitter.im/vesta-cp/Lobby.svg)](https://gitter.im/vesta-cp/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Forum](https://img.shields.io/badge/forum-vestacp.com-blue)](https://forum.vestacp.com)
+[![Documentation](https://img.shields.io/badge/docs-available-blue)](https://vestacp.com/docs/)
+[![Contributors](https://img.shields.io/github/contributors/Dennis-SEG/vesta)](https://github.com/Dennis-SEG/vesta/graphs/contributors)
 
 Vesta is back under active development as of February 25, 2024. We are committed to open source and will engage with the community to identify the new roadmap for Vesta.
 

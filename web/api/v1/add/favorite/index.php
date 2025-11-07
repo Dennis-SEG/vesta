@@ -1,6 +1,6 @@
 <?
 
-error_reporting(NULL);
+error_reporting(0);
 session_start();
 
 

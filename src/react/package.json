@@ -31,8 +31,7 @@
     "redux": "^5.0.1",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^3.1.0",
-    "sass": "^1.83.0",
-    "validate.js": "^0.13.1"
+    "sass": "^1.83.0"
   },
   "scripts": {
     "start": "react-scripts start",

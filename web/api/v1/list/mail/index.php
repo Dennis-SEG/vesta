@@ -1,5 +1,5 @@
 <?
-error_reporting(NULL);
+error_reporting(0);
 $TAB = 'MAIL';
 header("Content-Type: application/json");
 
