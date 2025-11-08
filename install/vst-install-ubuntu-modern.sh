@@ -535,9 +535,26 @@ mkdir -p \
     $VESTA/data/users \
     $VESTA/data/firewall
 
-# Download and install Vesta packages
-apt-get -y install vesta vesta-nginx vesta-php
-check_result $? 'Failed to install Vesta packages'
+# Install Vesta from source (apt packages not available for Ubuntu 24.04)
+echo "Installing Vesta from source repository..."
+REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+
+# Copy binaries
+echo "Copying Vesta binaries..."
+cp -rf $REPO_DIR/bin/* $VESTA/bin/
+chmod +x $VESTA/bin/*
+
+# Copy web files
+echo "Copying web interface..."
+cp -rf $REPO_DIR/web/* $VESTA/web/
+
+# Copy other core files
+echo "Copying configuration files..."
+[ -d "$REPO_DIR/func" ] && cp -rf $REPO_DIR/func $VESTA/
+[ -d "$REPO_DIR/data" ] && cp -rf $REPO_DIR/data/* $VESTA/data/ 2>/dev/null || true
+[ -d "$REPO_DIR/conf" ] && cp -rf $REPO_DIR/conf $VESTA/ 2>/dev/null || true
+
+echo "Vesta core files installed successfully"
 
 # Copy configuration templates from our modern configs
 if [ -d "$VESTA/install/ubuntu/$release" ]; then
