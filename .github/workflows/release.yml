@@ -23,7 +23,7 @@ jobs:
 
     - name: Install dependencies
       working-directory: ./src/react
-      run: npm ci
+      run: npm install --legacy-peer-deps
 
     - name: Build React UI
       working-directory: ./src/react
