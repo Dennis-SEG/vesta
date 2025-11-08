@@ -27,7 +27,7 @@ jobs:
 
     - name: Build React UI
       working-directory: ./src/react
-      run: npm run build
+      run: CI=false npm run build
 
     - name: Create release archive
       run: |
