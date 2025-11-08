@@ -364,7 +364,9 @@ fi
 # Install Apache
 if [ "$apache" = 'yes' ]; then
     echo "Installing Apache..."
-    apt-get -y install apache2 apache2-utils apache2-suexec-custom libapache2-mod-fcgid libapache2-mod-rpaf libapache2-mod-ruid2
+    # Note: libapache2-mod-ruid2 not available for Ubuntu 24.04, using mpm-itk as alternative
+    apt-get -y install apache2 apache2-utils apache2-suexec-custom libapache2-mod-fcgid libapache2-mod-rpaf apache2-mpm-itk || \
+    apt-get -y install apache2 apache2-utils apache2-suexec-custom libapache2-mod-fcgid libapache2-mod-rpaf
     check_result $? 'Failed to install Apache'
     systemctl stop apache2
 fi
