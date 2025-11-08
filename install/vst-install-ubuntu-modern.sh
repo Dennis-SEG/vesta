@@ -475,10 +475,11 @@ fi
 
 # Install additional utilities
 echo "Installing additional utilities..."
+# Note: rssh removed - deprecated and unavailable in Ubuntu 24.04
 apt-get -y install \
     awstats bc bsdmainutils cron curl e2fsprogs expect \
     flex ftp git idn imagemagick lsof mc ntpdate quota \
-    rrdtool rssh sudo vim-common webalizer whois zip net-tools
+    rrdtool sudo vim-common webalizer whois zip net-tools
 check_result $? 'Failed to install utilities'
 
 #----------------------------------------------------------#
