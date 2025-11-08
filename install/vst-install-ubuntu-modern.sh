@@ -521,7 +521,8 @@ echo "Installing Vesta Control Panel core..."
 
 # Create Vesta user
 if [ -z "$(grep ^admin: /etc/passwd)" ]; then
-    useradd -c "Vesta Control Panel" -d "$VESTA" -r -s /bin/bash admin
+    useradd -c "Vesta Control Panel" -d "$VESTA" -r -s /bin/bash admin 2>/dev/null || \
+    useradd -c "Vesta Control Panel" -d "$VESTA" -s /bin/bash -g admin admin || true
 fi
 
 # Create directory structure
