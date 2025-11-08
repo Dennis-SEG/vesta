@@ -33,7 +33,7 @@ jobs:
       run: |
         mkdir -p release
         tar -czf release/vesta-react-ui.tar.gz -C src/react/build .
-        tar -czf release/vesta-full.tar.gz --exclude='.git' --exclude='node_modules' --exclude='src/react/build' .
+        tar -czf release/vesta-full.tar.gz --exclude='.git' --exclude='node_modules' --exclude='src/react/build' --exclude='release' .
 
     - name: Generate checksums
       working-directory: ./release
