@@ -527,9 +527,11 @@ fi
 
 # Create directory structure
 mkdir -p \
+    $VESTA/bin \
     $VESTA/conf \
     $VESTA/log \
     $VESTA/ssl \
+    $VESTA/web \
     $VESTA/data/ips \
     $VESTA/data/queue \
     $VESTA/data/users \
