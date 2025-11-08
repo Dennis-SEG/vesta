@@ -490,7 +490,7 @@ check_result $? 'Failed to install utilities'
 if [ -e '/etc/init.d/apparmor' ]; then
     systemctl stop apparmor
     systemctl disable apparmor
-    aa-teardown
+    aa-teardown || true  # Ignore errors from AppArmor teardown
 fi
 
 # Generate admin password if not provided
