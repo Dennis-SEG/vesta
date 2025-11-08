@@ -331,13 +331,13 @@ check_result $? 'Failed to add PHP repository'
 
 # Add Nginx repository
 echo "Adding Nginx repository..."
-curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg
+curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --batch --yes --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu $codename nginx" > /etc/apt/sources.list.d/nginx.list
 check_result $? 'Failed to add Nginx repository'
 
 # Add Vesta repository
 echo "Adding Vesta repository..."
-wget -qO - https://c.vestacp.com/deb_signing.key | gpg --dearmor -o /usr/share/keyrings/vesta-keyring.gpg
+wget -qO - https://c.vestacp.com/deb_signing.key | gpg --batch --yes --dearmor -o /usr/share/keyrings/vesta-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/vesta-keyring.gpg] https://apt.vestacp.com/$codename/ $codename vesta" > /etc/apt/sources.list.d/vesta.list
 check_result $? 'Failed to add Vesta repository'
 
