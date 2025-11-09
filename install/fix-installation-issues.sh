@@ -58,8 +58,9 @@ systemctl stop mariadb
 mkdir -p /var/run/mysqld
 chown mysql:mysql /var/run/mysqld
 
-# Kill any existing mysqld processes
+# Kill any existing mysqld/mariadbd processes
 pkill -9 mysqld 2>/dev/null || true
+pkill -9 mariadbd 2>/dev/null || true
 sleep 2
 
 # Start mysqld_safe in background
@@ -73,13 +74,14 @@ DB_ROOT_PASS=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-25)
 # Reset root password
 mysql -u root << EOF
 FLUSH PRIVILEGES;
-ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASS';
+ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('$DB_ROOT_PASS');
 FLUSH PRIVILEGES;
 EOF
 
 # Kill mysqld_safe
 kill $MYSQLD_PID 2>/dev/null || true
 pkill -9 mysqld 2>/dev/null || true
+pkill -9 mariadbd 2>/dev/null || true
 sleep 2
 
 # Start MariaDB normally
@@ -234,13 +236,58 @@ else
 fi
 
 echo ""
-echo "=== Checking Firewall Rules ==="
+echo "=== Configuring Firewall Rules ==="
 
-# Check if iptables has rules
-if iptables -L -n | grep -q "Chain INPUT"; then
-    print_status "Firewall rules are configured"
+# Check if firewall rules need to be configured
+RULE_COUNT=$(iptables -L INPUT -n | grep -c "dpt:" || echo "0")
+if [ "$RULE_COUNT" -lt "4" ]; then
+    print_status "Configuring iptables firewall..."
+
+    # Flush existing rules
+    iptables -F
+    iptables -X
+    iptables -t nat -F
+    iptables -t nat -X
+    iptables -t mangle -F
+    iptables -t mangle -X
+
+    # Set default policies
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD DROP
+    iptables -P OUTPUT ACCEPT
+
+    # Allow loopback
+    iptables -A INPUT -i lo -j ACCEPT
+
+    # Allow established connections
+    iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+    # Allow critical services
+    iptables -A INPUT -p tcp --dport 22 -j ACCEPT    # SSH
+    iptables -A INPUT -p tcp --dport 80 -j ACCEPT    # HTTP
+    iptables -A INPUT -p tcp --dport 443 -j ACCEPT   # HTTPS
+    iptables -A INPUT -p tcp --dport 8083 -j ACCEPT  # Vesta Web Interface
+    iptables -A INPUT -p tcp --dport 21 -j ACCEPT    # FTP
+    iptables -A INPUT -p tcp --dport 25 -j ACCEPT    # SMTP
+    iptables -A INPUT -p tcp --dport 587 -j ACCEPT   # SMTP Submission
+    iptables -A INPUT -p tcp --dport 110 -j ACCEPT   # POP3
+    iptables -A INPUT -p tcp --dport 995 -j ACCEPT   # POP3S
+    iptables -A INPUT -p tcp --dport 143 -j ACCEPT   # IMAP
+    iptables -A INPUT -p tcp --dport 993 -j ACCEPT   # IMAPS
+    iptables -A INPUT -p tcp --dport 53 -j ACCEPT    # DNS TCP
+    iptables -A INPUT -p udp --dport 53 -j ACCEPT    # DNS UDP
+
+    # Drop all other INPUT traffic
+    iptables -A INPUT -j DROP
+
+    # Install and save rules
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install -y iptables-persistent > /dev/null 2>&1
+    netfilter-persistent save > /dev/null 2>&1
+
+    print_status "Firewall configured and saved"
 else
-    print_warning "No firewall rules found"
+    print_status "Firewall rules already configured"
 fi
 
 echo ""
@@ -257,6 +304,7 @@ echo "✓ Services checked and started"
 echo "✓ Admin home directory ownership fixed"
 echo "✓ Admin user directory created"
 echo "✓ Default package created"
+echo "✓ Firewall configured (iptables)"
 echo ""
 echo "Next Steps:"
 echo "-----------"
@@ -264,6 +312,7 @@ echo "1. Test MariaDB: mysql -e 'SHOW DATABASES;'"
 echo "2. Access web interface: https://$(hostname -I | awk '{print $1}'):8083"
 echo "3. Check service status: systemctl status nginx php8.3-fpm mariadb"
 echo "4. Verify admin user: grep '^admin:' /etc/passwd"
+echo "5. Check firewall: iptables -L -n"
 echo ""
 
 exit 0
