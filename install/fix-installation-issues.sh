@@ -292,7 +292,7 @@ if grep -q "^admin:" /etc/passwd; then
     ADMIN_DATA_DIR="$VESTA/data/users/admin"
 
     # List of required configuration files
-    CONFIG_FILES=("db.conf" "dns.conf" "web.conf" "mail.conf" "cron.conf" "backup.conf")
+    CONFIG_FILES=("db.conf" "dns.conf" "web.conf" "mail.conf" "cron.conf" "backup.conf" "notifications.conf")
 
     for conf_file in "${CONFIG_FILES[@]}"; do
         if [ ! -f "$ADMIN_DATA_DIR/$conf_file" ]; then
