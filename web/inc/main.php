@@ -1,5 +1,6 @@
 <?php
 
+putenv("VESTA=/usr/local/vesta");
 session_start();
 
 define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');

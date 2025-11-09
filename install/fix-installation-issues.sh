@@ -226,6 +226,19 @@ PKGEOF
 fi
 
 echo ""
+echo "=== Fixing PHP Environment Variables ==="
+
+# Fix missing VESTA environment variable in PHP context (Bug #27)
+if ! grep -q 'putenv("VESTA=/usr/local/vesta")' $VESTA/web/inc/main.php; then
+    print_status "Adding VESTA environment variable to inc/main.php..."
+    sed -i '3i putenv("VESTA=/usr/local/vesta");' $VESTA/web/inc/main.php
+    systemctl restart php8.3-fpm
+    print_status "VESTA environment variable configured"
+else
+    print_status "VESTA environment variable already configured"
+fi
+
+echo ""
 echo "=== Checking Web Interface ==="
 
 # Check if web interface is accessible
@@ -304,6 +317,7 @@ echo "✓ Services checked and started"
 echo "✓ Admin home directory ownership fixed"
 echo "✓ Admin user directory created"
 echo "✓ Default package created"
+echo "✓ VESTA environment variable configured"
 echo "✓ Firewall configured (iptables)"
 echo ""
 echo "Next Steps:"
