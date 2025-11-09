@@ -9,9 +9,9 @@ This release fixes 1 critical bug discovered during production testing of v2.0.5
 ### Admin Configuration Files (Bug #29)
 
 **Bug #29: Missing Admin Configuration Files Causing API Errors**
-- Fixed "No such file or directory" errors on database, DNS, web, and mail APIs
+- Fixed "No such file or directory" errors on database, DNS, web, mail, and notifications APIs
 - Created missing configuration files in /usr/local/vesta/data/users/admin/
-- Files created: db.conf, dns.conf, web.conf, mail.conf, cron.conf, backup.conf
+- Files created: db.conf, dns.conf, web.conf, mail.conf, cron.conf, backup.conf, notifications.conf
 - All files created with proper permissions (640) and ownership (admin:admin)
 - Resolves empty data display in web interface for databases, domains, and mail
 - Commit: 471528bf
@@ -53,6 +53,7 @@ This release fixes 1 critical bug discovered during production testing of v2.0.5
 | **DNS API** | **100%** |
 | **Web API** | **100%** |
 | **Mail API** | **100%** |
+| **Notifications API** | **100%** |
 
 ## Verified Working
 
@@ -72,6 +73,7 @@ This release fixes 1 critical bug discovered during production testing of v2.0.5
 ✅ **DNS API returning valid JSON**
 ✅ **Web API returning valid JSON**
 ✅ **Mail API returning valid JSON**
+✅ **Notifications API returning valid JSON**
 
 ## Installation
 
