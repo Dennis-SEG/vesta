@@ -239,6 +239,19 @@ else
 fi
 
 echo ""
+echo "=== Fixing VESTA_CMD Definition (Bug #31) ==="
+
+# Fix VESTA_CMD to explicitly set VESTA environment variable
+if ! grep -q "define('VESTA_CMD', 'VESTA=/usr/local/vesta" $VESTA/web/inc/main.php; then
+    print_status "Updating VESTA_CMD definition in inc/main.php..."
+    sed -i "s|define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');|define('VESTA_CMD', 'VESTA=/usr/local/vesta /usr/bin/sudo /usr/local/vesta/bin/');|" $VESTA/web/inc/main.php
+    systemctl restart php8.3-fpm
+    print_status "VESTA_CMD definition updated"
+else
+    print_status "VESTA_CMD definition already correct"
+fi
+
+echo ""
 echo "=== Checking Web Interface ==="
 
 # Check if web interface is accessible
@@ -380,6 +393,7 @@ echo "✓ Admin home directory ownership fixed"
 echo "✓ Admin user directory created"
 echo "✓ Default package created"
 echo "✓ VESTA environment variable configured (Bug #27)"
+echo "✓ VESTA_CMD definition updated (Bug #31)"
 echo "✓ Firewall rules.conf format fixed (Bug #28)"
 echo "✓ Admin configuration files created (Bug #29)"
 echo "✓ Firewall configured (iptables)"
