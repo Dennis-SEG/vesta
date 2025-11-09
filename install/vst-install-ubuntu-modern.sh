@@ -876,7 +876,8 @@ fi
 echo "Configuring Vesta admin user..."
 
 # Set admin password
-echo "admin:$vpass" | chpasswd
+# Use SHA-512 instead of yescrypt (Ubuntu 24.04 default) for Vesta compatibility
+echo "admin:$vpass" | chpasswd -c SHA512
 
 # Create admin user configuration
 mkdir -p $VESTA/data/users/admin
