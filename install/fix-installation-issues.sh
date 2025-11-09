@@ -379,6 +379,29 @@ else
 fi
 
 echo ""
+echo "=== Creating Service Aliases for Ubuntu 24.04 (Bug #36) ==="
+
+# Create mysql service alias for mariadb
+if [ ! -L "/etc/systemd/system/mysql.service" ]; then
+    print_status "Creating mysql service alias for mariadb..."
+    ln -sf /usr/lib/systemd/system/mariadb.service /etc/systemd/system/mysql.service
+    systemctl daemon-reload
+    print_status "MySQL service alias created"
+else
+    print_status "MySQL service alias already exists"
+fi
+
+# Create iptables service alias for netfilter-persistent
+if [ ! -L "/etc/systemd/system/iptables.service" ]; then
+    print_status "Creating iptables service alias for netfilter-persistent..."
+    ln -sf /usr/lib/systemd/system/netfilter-persistent.service /etc/systemd/system/iptables.service
+    systemctl daemon-reload
+    print_status "iptables service alias created"
+else
+    print_status "iptables service alias already exists"
+fi
+
+echo ""
 echo "=== Installing Web and DNS Templates (Bug #32) ==="
 
 # Check if templates directory exists and has content
@@ -431,6 +454,7 @@ echo "✓ VESTA_CMD definition updated (Bug #31)"
 echo "✓ Firewall rules.conf format fixed (Bug #28)"
 echo "✓ Admin configuration files created (Bug #29)"
 echo "✓ Firewall configured (iptables)"
+echo "✓ Service aliases created for Ubuntu 24.04 (Bug #36)"
 echo "✓ Web and DNS templates installed (Bug #32)"
 echo ""
 echo "Next Steps:"
