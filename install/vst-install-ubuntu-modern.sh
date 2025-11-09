@@ -761,6 +761,12 @@ chown www-data:www-data /run/php
 mkdir -p /var/log/php
 chown www-data:www-data /var/log/php
 
+# Add VESTA environment variable to PHP-FPM pool configuration
+echo "Adding VESTA environment variable to PHP-FPM..."
+if ! grep -q "^env\[VESTA\]" /etc/php/$php_version/fpm/pool.d/www.conf; then
+    echo "env[VESTA] = $VESTA" >> /etc/php/$php_version/fpm/pool.d/www.conf
+fi
+
 # Start PHP-FPM
 systemctl enable php${php_version}-fpm
 systemctl start php${php_version}-fpm
