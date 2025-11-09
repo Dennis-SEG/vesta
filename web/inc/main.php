@@ -3,7 +3,7 @@
 putenv("VESTA=/usr/local/vesta");
 session_start();
 
-define('VESTA_CMD', '/usr/bin/sudo /usr/local/vesta/bin/');
+define('VESTA_CMD', 'VESTA=/usr/local/vesta /usr/bin/sudo /usr/local/vesta/bin/');
 define('JS_LATEST_UPDATE', '1491697868');
 
 $i = 0;
