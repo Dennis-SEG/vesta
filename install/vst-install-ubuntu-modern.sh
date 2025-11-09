@@ -655,40 +655,40 @@ source /etc/profile.d/vesta.sh
 echo "VESTA environment variable configured"
 
 # Copy configuration templates from our modern configs
-if [ -d "$VESTA/install/ubuntu/$release" ]; then
+if [ -d "$REPO_DIR/install/ubuntu/$release" ]; then
     echo "Applying modern configuration templates..."
 
     # Copy PHP configurations
-    if [ -d "$VESTA/install/ubuntu/$release/php" ]; then
-        cp -f $VESTA/install/ubuntu/$release/php/php.ini /etc/php/$php_version/fpm/php.ini
-        cp -f $VESTA/install/ubuntu/$release/php/www.conf /etc/php/$php_version/fpm/pool.d/www.conf
+    if [ -d "$REPO_DIR/install/ubuntu/$release/php" ]; then
+        cp -f $REPO_DIR/install/ubuntu/$release/php/php.ini /etc/php/$php_version/fpm/php.ini
+        cp -f $REPO_DIR/install/ubuntu/$release/php/www.conf /etc/php/$php_version/fpm/pool.d/www.conf
     fi
 
     # Copy Nginx configurations
-    if [ -d "$VESTA/install/ubuntu/$release/nginx" ]; then
-        cp -f $VESTA/install/ubuntu/$release/nginx/nginx.conf /etc/nginx/nginx.conf
+    if [ -d "$REPO_DIR/install/ubuntu/$release/nginx" ]; then
+        cp -f $REPO_DIR/install/ubuntu/$release/nginx/nginx.conf /etc/nginx/nginx.conf
     fi
 
     # Copy Apache configurations
-    if [ "$apache" = 'yes' ] && [ -d "$VESTA/install/ubuntu/$release/apache2" ]; then
-        cp -f $VESTA/install/ubuntu/$release/apache2/apache2.conf /etc/apache2/apache2.conf
+    if [ "$apache" = 'yes' ] && [ -d "$REPO_DIR/install/ubuntu/$release/apache2" ]; then
+        cp -f $REPO_DIR/install/ubuntu/$release/apache2/apache2.conf /etc/apache2/apache2.conf
     fi
 
     # Copy MariaDB configurations
-    if [ "$mysql" = 'yes' ] && [ -d "$VESTA/install/ubuntu/$release/mysql" ]; then
-        cp -f $VESTA/install/ubuntu/$release/mysql/my.cnf /etc/mysql/my.cnf
+    if [ "$mysql" = 'yes' ] && [ -d "$REPO_DIR/install/ubuntu/$release/mysql" ]; then
+        cp -f $REPO_DIR/install/ubuntu/$release/mysql/my.cnf /etc/mysql/my.cnf
     fi
 
     # Copy fail2ban configurations
-    if [ "$fail2ban" = 'yes' ] && [ -d "$VESTA/install/ubuntu/$release/fail2ban" ]; then
-        cp -f $VESTA/install/ubuntu/$release/fail2ban/jail.local /etc/fail2ban/jail.local
+    if [ "$fail2ban" = 'yes' ] && [ -d "$REPO_DIR/install/ubuntu/$release/fail2ban" ]; then
+        cp -f $REPO_DIR/install/ubuntu/$release/fail2ban/jail.local /etc/fail2ban/jail.local
     fi
 
     # Install sudo configuration
-    if [ -f "$VESTA/install/ubuntu/$release/sudo/admin" ]; then
+    if [ -f "$REPO_DIR/install/ubuntu/$release/sudo/admin" ]; then
         echo "Installing sudo configuration..."
         mkdir -p /etc/sudoers.d
-        cp -f $VESTA/install/ubuntu/$release/sudo/admin /etc/sudoers.d/
+        cp -f $REPO_DIR/install/ubuntu/$release/sudo/admin /etc/sudoers.d/
         chmod 440 /etc/sudoers.d/admin
     fi
 fi
