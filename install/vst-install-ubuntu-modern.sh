@@ -853,6 +853,76 @@ else
 fi
 
 #----------------------------------------------------------#
+#                  Configure Web Interface                 #
+#----------------------------------------------------------#
+
+echo "Configuring Vesta Web Interface on port 8083..."
+
+# Create Nginx configuration for Vesta web interface
+cat > /etc/nginx/conf.d/vesta.conf << 'VESTA_NGINX_CONF'
+server {
+    listen 8083 ssl;
+    http2 on;
+    server_name _;
+
+    root /usr/local/vesta/web;
+    index index.php index.html;
+
+    # SSL Configuration
+    ssl_certificate /usr/local/vesta/ssl/certificate.crt;
+    ssl_certificate_key /usr/local/vesta/ssl/certificate.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    # Logging
+    access_log /var/log/nginx/vesta-access.log;
+    error_log /var/log/nginx/vesta-error.log;
+
+    # Max upload size
+    client_max_body_size 100M;
+
+    # Main location block
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    # PHP handling
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/run/php/php${php_version}-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_read_timeout 300;
+    }
+
+    # Deny access to hidden files
+    location ~ /\. {
+        deny all;
+    }
+
+    # Static files caching
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}
+VESTA_NGINX_CONF
+
+# Add nginx user to www-data group for PHP-FPM socket access
+usermod -a -G www-data nginx
+
+echo "Web interface configured at https://[server-ip]:8083"
+
+#----------------------------------------------------------#
 #                  Start All Services                      #
 #----------------------------------------------------------#
 
