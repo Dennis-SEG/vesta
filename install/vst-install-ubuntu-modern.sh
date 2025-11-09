@@ -558,6 +558,102 @@ echo "Copying configuration files..."
 
 echo "Vesta core files installed successfully"
 
+#----------------------------------------------------------#
+#                  Initialize Vesta Configuration          #
+#----------------------------------------------------------#
+
+echo "Initializing Vesta configuration..."
+
+# Create vesta.conf with system configuration
+# Web server configuration
+if [ "$apache" != 'yes' ] && [ "$nginx" = 'yes' ]; then
+    echo "WEB_SYSTEM='nginx'" >> $VESTA/conf/vesta.conf
+    echo "WEB_PORT='80'" >> $VESTA/conf/vesta.conf
+    echo "WEB_SSL_PORT='443'" >> $VESTA/conf/vesta.conf
+    echo "WEB_SSL='openssl'"  >> $VESTA/conf/vesta.conf
+    echo "WEB_BACKEND='php-fpm'" >> $VESTA/conf/vesta.conf
+else
+    echo "WEB_SYSTEM='apache2'" >> $VESTA/conf/vesta.conf
+    echo "WEB_RGROUPS='www-data'" >> $VESTA/conf/vesta.conf
+    if [ "$nginx" = 'yes' ]; then
+        echo "WEB_PORT='8080'" >> $VESTA/conf/vesta.conf
+        echo "WEB_SSL_PORT='8443'" >> $VESTA/conf/vesta.conf
+        echo "PROXY_SYSTEM='nginx'" >> $VESTA/conf/vesta.conf
+        echo "PROXY_PORT='80'" >> $VESTA/conf/vesta.conf
+        echo "PROXY_SSL_PORT='443'" >> $VESTA/conf/vesta.conf
+    else
+        echo "WEB_PORT='80'" >> $VESTA/conf/vesta.conf
+        echo "WEB_SSL_PORT='443'" >> $VESTA/conf/vesta.conf
+    fi
+    echo "WEB_SSL='mod_ssl'"  >> $VESTA/conf/vesta.conf
+fi
+
+echo "STATS_SYSTEM='webalizer,awstats'" >> $VESTA/conf/vesta.conf
+
+# FTP configuration
+if [ "$vsftpd" = 'yes' ]; then
+    echo "FTP_SYSTEM='vsftpd'" >> $VESTA/conf/vesta.conf
+fi
+if [ "$proftpd" = 'yes' ]; then
+    echo "FTP_SYSTEM='proftpd'" >> $VESTA/conf/vesta.conf
+fi
+
+# DNS configuration
+if [ "$named" = 'yes' ]; then
+    echo "DNS_SYSTEM='bind9'" >> $VESTA/conf/vesta.conf
+fi
+
+# Mail configuration
+if [ "$exim" = 'yes' ]; then
+    echo "MAIL_SYSTEM='exim4'" >> $VESTA/conf/vesta.conf
+    if [ "$clamd" = 'yes' ]; then
+        echo "ANTIVIRUS_SYSTEM='clamav'" >> $VESTA/conf/vesta.conf
+    fi
+    if [ "$spamd" = 'yes' ]; then
+        echo "ANTISPAM_SYSTEM='spamassassin'" >> $VESTA/conf/vesta.conf
+    fi
+    if [ "$dovecot" = 'yes' ]; then
+        echo "IMAP_SYSTEM='dovecot'" >> $VESTA/conf/vesta.conf
+    fi
+fi
+
+# Database configuration
+if [ "$mysql" = 'yes' ]; then
+    echo "DB_SYSTEM='mysql'" >> $VESTA/conf/vesta.conf
+fi
+
+# System configuration
+echo "CRON_SYSTEM='cron'" >> $VESTA/conf/vesta.conf
+
+if [ "$iptables" = 'yes' ]; then
+    echo "FIREWALL_SYSTEM='iptables'" >> $VESTA/conf/vesta.conf
+fi
+if [ "$fail2ban" = 'yes' ]; then
+    echo "FIREWALL_EXTENSION='fail2ban'" >> $VESTA/conf/vesta.conf
+fi
+
+if [ "$quota" = 'yes' ]; then
+    echo "DISK_QUOTA='yes'" >> $VESTA/conf/vesta.conf
+fi
+
+# Backup configuration
+echo "BACKUP_SYSTEM='local'" >> $VESTA/conf/vesta.conf
+
+# General configuration
+echo "LANGUAGE='en'" >> $VESTA/conf/vesta.conf
+echo "VERSION='2.0.2'" >> $VESTA/conf/vesta.conf
+echo "NOTIFY_ADMIN_FULL_BACKUP='$email'" >> $VESTA/conf/vesta.conf
+echo "UPDATE_HOSTNAME_SSL='yes'" >> $VESTA/conf/vesta.conf
+
+echo "Vesta configuration initialized"
+
+# Setup VESTA environment variable
+echo "Setting up VESTA environment variable..."
+echo "export VESTA='$VESTA'" > /etc/profile.d/vesta.sh
+chmod 755 /etc/profile.d/vesta.sh
+source /etc/profile.d/vesta.sh
+echo "VESTA environment variable configured"
+
 # Copy configuration templates from our modern configs
 if [ -d "$VESTA/install/ubuntu/$release" ]; then
     echo "Applying modern configuration templates..."
