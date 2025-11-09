@@ -683,6 +683,14 @@ if [ -d "$VESTA/install/ubuntu/$release" ]; then
     if [ "$fail2ban" = 'yes' ] && [ -d "$VESTA/install/ubuntu/$release/fail2ban" ]; then
         cp -f $VESTA/install/ubuntu/$release/fail2ban/jail.local /etc/fail2ban/jail.local
     fi
+
+    # Install sudo configuration
+    if [ -f "$VESTA/install/ubuntu/$release/sudo/admin" ]; then
+        echo "Installing sudo configuration..."
+        mkdir -p /etc/sudoers.d
+        cp -f $VESTA/install/ubuntu/$release/sudo/admin /etc/sudoers.d/
+        chmod 440 /etc/sudoers.d/admin
+    fi
 fi
 
 #----------------------------------------------------------#
