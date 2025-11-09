@@ -767,9 +767,9 @@ if ! grep -q "^env\[VESTA\]" /etc/php/$php_version/fpm/pool.d/www.conf; then
     echo "env[VESTA] = $VESTA" >> /etc/php/$php_version/fpm/pool.d/www.conf
 fi
 
-# Start PHP-FPM
+# Start/Restart PHP-FPM to pick up configuration changes
 systemctl enable php${php_version}-fpm
-systemctl start php${php_version}-fpm
+systemctl restart php${php_version}-fpm
 check_result $? 'Failed to start PHP-FPM'
 
 #----------------------------------------------------------#
