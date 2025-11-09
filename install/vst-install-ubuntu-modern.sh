@@ -955,7 +955,7 @@ fi
 echo "Configuring Vesta Web Interface on port 8083..."
 
 # Create Nginx configuration for Vesta web interface
-cat > /etc/nginx/conf.d/vesta.conf << 'VESTA_NGINX_CONF'
+cat > /etc/nginx/conf.d/vesta.conf << VESTA_NGINX_CONF
 server {
     listen 8083 ssl;
     http2 on;
@@ -985,18 +985,18 @@ server {
 
     # Main location block
     location / {
-        try_files $uri $uri/ /index.php?$args;
+        try_files \$uri \$uri/ /index.php?\$args;
     }
 
     # PHP handling
-    location ~ \.php$ {
-        try_files $uri =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    location ~ \.php\$ {
+        try_files \$uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)\$;
         fastcgi_pass unix:/run/php/php${php_version}-fpm.sock;
         fastcgi_index index.php;
         include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        fastcgi_param PATH_INFO \$fastcgi_path_info;
         fastcgi_read_timeout 300;
     }
 
@@ -1006,7 +1006,7 @@ server {
     }
 
     # Static files caching
-    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)\$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
