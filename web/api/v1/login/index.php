@@ -35,6 +35,10 @@ if (isset($_SESSION['user'])) {
     }
 }
 
+// Initialize variables
+$users = null;
+$error = null;
+
 // Basic auth
 if (isset($_POST['user']) && isset($_POST['password'])) {
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
@@ -125,7 +129,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
 // Check system configuration
 exec (VESTA_CMD . "v-list-sys-config json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
-$sys_arr = $data['config'];
+$sys_arr = $data['config'] ?? [];
 foreach ($sys_arr as $key => $value) {
     $_SESSION[$key] = $value;
 }
@@ -156,19 +160,24 @@ if (empty($_SESSION['token'])) {
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
 
-$v_user = empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'];
-top_panel($v_user, $TAB);
+$v_user = empty($_SESSION['look']) ? ($_SESSION['user'] ?? 'admin') : $_SESSION['look'];
+if (isset($_SESSION['user'])) {
+    top_panel($v_user, $TAB);
 
-$panel[$v_user]['U_BANDWIDTH_MEASURE'] = humanize_usage_measure($panel[$v_user]['U_BANDWIDTH']);
-$panel[$v_user]['U_BANDWIDTH'] = humanize_usage_size($panel[$v_user]['U_BANDWIDTH']);
+    // Only process panel data if user is logged in
+    if (isset($panel[$v_user])) {
+        $panel[$v_user]['U_BANDWIDTH_MEASURE'] = humanize_usage_measure($panel[$v_user]['U_BANDWIDTH']);
+        $panel[$v_user]['U_BANDWIDTH'] = humanize_usage_size($panel[$v_user]['U_BANDWIDTH']);
 
-$panel[$v_user]['U_DISK_MEASURE'] = humanize_usage_measure($panel[$v_user]['U_DISK']);
-$panel[$v_user]['U_DISK'] = humanize_usage_size($panel[$v_user]['U_DISK']);
+        $panel[$v_user]['U_DISK_MEASURE'] = humanize_usage_measure($panel[$v_user]['U_DISK']);
+        $panel[$v_user]['U_DISK'] = humanize_usage_size($panel[$v_user]['U_DISK']);
+    }
+}
 
 $result = array(
     'token' => $_SESSION['token'],
-    'panel' => $panel,
-    'data' => $users[$v_user],
+    'panel' => $panel ?? [],
+    'data' => ($users && isset($users[$v_user])) ? $users[$v_user] : null,
     'user' => $v_user,
     'session' => $_SESSION,
     'i18n' => $LANG[$_SESSION['language']],
