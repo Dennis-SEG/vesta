@@ -843,34 +843,35 @@ if [ "$iptables" = 'yes' ]; then
     # Create basic firewall rules
     mkdir -p $VESTA/data/firewall
 
-    # Allow SSH, HTTP, HTTPS, Vesta, Mail, DNS, FTP
-    cat > $VESTA/data/firewall/rules.conf <<EOF
-# SSH
-ACCEPT 22
+    # Copy template firewall rules from repository
+    if [ -f "$VESTA_INSTALL_DIR/../data/firewall/rules.conf" ]; then
+        cp "$VESTA_INSTALL_DIR/../data/firewall/rules.conf" $VESTA/data/firewall/rules.conf
+        # Update Vesta port in rules
+        sed -i "s/8083/$port/g" $VESTA/data/firewall/rules.conf
+    else
+        # Fallback: Create rules in proper Vesta format
+        cat > $VESTA/data/firewall/rules.conf <<'FWEOF'
+RULE='1' ACTION='ACCEPT' PROTOCOL='TCP' PORT='22' IP='0.0.0.0/0' COMMENT='SSH' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='2' ACTION='ACCEPT' PROTOCOL='TCP' PORT='80' IP='0.0.0.0/0' COMMENT='HTTP' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='3' ACTION='ACCEPT' PROTOCOL='TCP' PORT='443' IP='0.0.0.0/0' COMMENT='HTTPS' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='4' ACTION='ACCEPT' PROTOCOL='TCP' PORT='8083' IP='0.0.0.0/0' COMMENT='Vesta Control Panel' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='5' ACTION='ACCEPT' PROTOCOL='TCP' PORT='25' IP='0.0.0.0/0' COMMENT='SMTP' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='6' ACTION='ACCEPT' PROTOCOL='TCP' PORT='465' IP='0.0.0.0/0' COMMENT='SMTPS' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='7' ACTION='ACCEPT' PROTOCOL='TCP' PORT='587' IP='0.0.0.0/0' COMMENT='SMTP Submission' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='8' ACTION='ACCEPT' PROTOCOL='TCP' PORT='110' IP='0.0.0.0/0' COMMENT='POP3' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='9' ACTION='ACCEPT' PROTOCOL='TCP' PORT='995' IP='0.0.0.0/0' COMMENT='POP3S' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='10' ACTION='ACCEPT' PROTOCOL='TCP' PORT='143' IP='0.0.0.0/0' COMMENT='IMAP' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='11' ACTION='ACCEPT' PROTOCOL='TCP' PORT='993' IP='0.0.0.0/0' COMMENT='IMAPS' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='12' ACTION='ACCEPT' PROTOCOL='TCP' PORT='53' IP='0.0.0.0/0' COMMENT='DNS' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='13' ACTION='ACCEPT' PROTOCOL='UDP' PORT='53' IP='0.0.0.0/0' COMMENT='DNS' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='14' ACTION='ACCEPT' PROTOCOL='TCP' PORT='21' IP='0.0.0.0/0' COMMENT='FTP' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+RULE='15' ACTION='ACCEPT' PROTOCOL='TCP' PORT='12000:12100' IP='0.0.0.0/0' COMMENT='FTP passive' SUSPENDED='no' TIME='00:00:00' DATE='2025-11-09'
+FWEOF
+        # Update Vesta port in rules
+        sed -i "s/8083/$port/g" $VESTA/data/firewall/rules.conf
+    fi
 
-# HTTP/HTTPS
-ACCEPT 80
-ACCEPT 443
-
-# Vesta Control Panel
-ACCEPT $port
-
-# Mail
-ACCEPT 25
-ACCEPT 465
-ACCEPT 587
-ACCEPT 110
-ACCEPT 995
-ACCEPT 143
-ACCEPT 993
-
-# DNS
-ACCEPT 53
-
-# FTP
-ACCEPT 21
-ACCEPT 12000:12100
-EOF
+    chmod 660 $VESTA/data/firewall/rules.conf
 fi
 
 if [ "$fail2ban" = 'yes' ]; then
