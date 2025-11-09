@@ -379,6 +379,40 @@ else
 fi
 
 echo ""
+echo "=== Installing Web and DNS Templates (Bug #32) ==="
+
+# Check if templates directory exists and has content
+if [ ! -d "$VESTA/data/templates/web" ] || [ ! -d "$VESTA/data/templates/dns" ]; then
+    print_status "Installing web and DNS templates..."
+
+    # Determine source directory - try multiple Ubuntu versions
+    TEMPLATE_SOURCE=""
+    for version in 24.04 22.04 20.04 18.04; do
+        if [ -d "/tmp/vesta/install/ubuntu/$version/templates" ]; then
+            TEMPLATE_SOURCE="/tmp/vesta/install/ubuntu/$version/templates"
+            break
+        fi
+    done
+
+    if [ -z "$TEMPLATE_SOURCE" ]; then
+        print_warning "Template source directory not found, trying default location..."
+        TEMPLATE_SOURCE="/usr/local/vesta/install/ubuntu/18.04/templates"
+    fi
+
+    if [ -d "$TEMPLATE_SOURCE" ]; then
+        mkdir -p $VESTA/data/templates
+        cp -r $TEMPLATE_SOURCE/* $VESTA/data/templates/
+        chown -R admin:admin $VESTA/data/templates
+        chmod -R 755 $VESTA/data/templates
+        print_status "Templates installed successfully"
+    else
+        print_error "Template source directory not found at $TEMPLATE_SOURCE"
+    fi
+else
+    print_status "Templates already installed"
+fi
+
+echo ""
 echo "=========================================="
 echo "  Fix Script Completed"
 echo "=========================================="
@@ -397,6 +431,7 @@ echo "✓ VESTA_CMD definition updated (Bug #31)"
 echo "✓ Firewall rules.conf format fixed (Bug #28)"
 echo "✓ Admin configuration files created (Bug #29)"
 echo "✓ Firewall configured (iptables)"
+echo "✓ Web and DNS templates installed (Bug #32)"
 echo ""
 echo "Next Steps:"
 echo "-----------"
