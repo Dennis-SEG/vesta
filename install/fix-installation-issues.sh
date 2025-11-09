@@ -151,6 +151,36 @@ for service in "${SERVICES[@]}"; do
 done
 
 echo ""
+echo "=== Fixing Admin User Home Directory ==="
+
+# Check if admin user exists
+if ! grep -q "^admin:" /etc/passwd; then
+    print_error "Admin user not found in /etc/passwd"
+else
+    # Ensure admin home directory is set correctly
+    ADMIN_HOME=$(grep "^admin:" /etc/passwd | cut -d: -f6)
+    if [ "$ADMIN_HOME" != "$VESTA" ]; then
+        print_warning "Admin home directory is $ADMIN_HOME, should be $VESTA"
+        usermod -d $VESTA admin
+        print_status "Admin home directory updated"
+    fi
+
+    # Ensure Vesta directory exists and has proper ownership
+    if [ ! -d "$VESTA" ]; then
+        print_error "Vesta directory $VESTA does not exist"
+    else
+        chown -R admin:admin $VESTA
+        chmod 755 $VESTA
+        print_status "Admin home directory ownership fixed"
+    fi
+
+    # Create admin user data directory
+    mkdir -p $VESTA/data/users/admin
+    chown admin:admin $VESTA/data/users/admin
+    print_status "Admin user directory created"
+fi
+
+echo ""
 echo "=== Creating Default Package ==="
 
 # Check if admin user exists
@@ -224,6 +254,8 @@ echo "✓ MariaDB root access fixed"
 echo "✓ Root password saved to /root/.my.cnf"
 echo "✓ Apache MPM module conflict resolved"
 echo "✓ Services checked and started"
+echo "✓ Admin home directory ownership fixed"
+echo "✓ Admin user directory created"
 echo "✓ Default package created"
 echo ""
 echo "Next Steps:"
@@ -231,6 +263,7 @@ echo "-----------"
 echo "1. Test MariaDB: mysql -e 'SHOW DATABASES;'"
 echo "2. Access web interface: https://$(hostname -I | awk '{print $1}'):8083"
 echo "3. Check service status: systemctl status nginx php8.3-fpm mariadb"
+echo "4. Verify admin user: grep '^admin:' /etc/passwd"
 echo ""
 
 exit 0

@@ -535,7 +535,17 @@ mkdir -p \
     $VESTA/data/ips \
     $VESTA/data/queue \
     $VESTA/data/users \
-    $VESTA/data/firewall
+    $VESTA/data/firewall \
+    $VESTA/data/packages
+
+# Ensure admin home directory exists and has proper ownership
+# (useradd -r doesn't create home directory automatically)
+chown -R admin:admin $VESTA
+chmod 755 $VESTA
+
+# Create admin user subdirectories
+mkdir -p $VESTA/data/users/admin
+chown admin:admin $VESTA/data/users/admin
 
 # Install Vesta from source (apt packages not available for Ubuntu 24.04)
 echo "Installing Vesta from source repository..."
