@@ -285,6 +285,32 @@ FWEOF
 fi
 
 echo ""
+echo "=== Creating Missing Admin Configuration Files (Bug #29) ==="
+
+# Check if admin configuration files exist
+if grep -q "^admin:" /etc/passwd; then
+    ADMIN_DATA_DIR="$VESTA/data/users/admin"
+
+    # List of required configuration files
+    CONFIG_FILES=("db.conf" "dns.conf" "web.conf" "mail.conf" "cron.conf" "backup.conf")
+
+    for conf_file in "${CONFIG_FILES[@]}"; do
+        if [ ! -f "$ADMIN_DATA_DIR/$conf_file" ]; then
+            print_status "Creating $conf_file..."
+            touch "$ADMIN_DATA_DIR/$conf_file"
+            chmod 640 "$ADMIN_DATA_DIR/$conf_file"
+            chown admin:admin "$ADMIN_DATA_DIR/$conf_file"
+        else
+            print_status "$conf_file already exists"
+        fi
+    done
+
+    print_status "Admin configuration files verified"
+else
+    print_warning "Admin user not found, skipping configuration files"
+fi
+
+echo ""
 echo "=== Configuring Firewall Rules ==="
 
 # Check if firewall rules need to be configured
@@ -355,6 +381,7 @@ echo "✓ Admin user directory created"
 echo "✓ Default package created"
 echo "✓ VESTA environment variable configured (Bug #27)"
 echo "✓ Firewall rules.conf format fixed (Bug #28)"
+echo "✓ Admin configuration files created (Bug #29)"
 echo "✓ Firewall configured (iptables)"
 echo ""
 echo "Next Steps:"
