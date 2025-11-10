@@ -26,7 +26,7 @@ const MainNav = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!userName || !Object.entries(user).length || !Object.entries(session).length) {
+    if (!userName || !user || !session || !Object.entries(user).length || !Object.entries(session).length) {
       return navigate('/login');
     }
 
