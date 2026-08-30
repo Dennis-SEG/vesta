@@ -1,46 +1,67 @@
-[Vesta Control Panel](http://vestacp.com/)
-==================================================
+Vesta Control Panel
+===========================
 
-Vesta is back under active development as of 25 February 2024. We are commited to open source, and will engage with the community to identify the new roadmap for Vesta. Stay tuned!
+> **This is a fork of [outroll/vesta](https://github.com/outroll/vesta).**
+> It exists because the installers stopped working on current Linux releases.
+> The changes here are offered upstream in
+> [outroll/vesta#2322](https://github.com/outroll/vesta/pull/2322); this
+> repository is where they can be installed from in the meantime.
+> Not affiliated with or endorsed by the upstream maintainers.
 
-[![Join the chat at https://gitter.im/vesta-cp/Lobby](https://badges.gitter.im/vesta-cp/Lobby.svg)](https://gitter.im/vesta-cp/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-* Vesta is an open source hosting control panel.
-* Vesta has a clean and focused interface without the clutter.
-* Vesta has the latest of very innovative technologies.
-
-How to install (2 step)
+Supported platforms
 ----------------------------
-Connect to your server as root via SSH
-```bash
-ssh root@your.server
-```
 
-Download the installation script, and run it:
-```bash
-curl https://vestacp.com/pub/vst-install.sh | bash
-```
+Each of these was installed end to end and logged into on the release in
+question -- not merely built. See
+[v2.1.0](https://github.com/Dennis-SEG/vesta/releases/tag/v2.1.0).
 
-How to install (BETA and in-progress work versions)
+| Platform | Status |
+|---|---|
+| Ubuntu 20.04, 22.04, 24.04 | working |
+| Debian 11, 12 | working |
+| Alpine 3.24 | working |
+| RHEL / Rocky 8 | **not working** -- package list targets EL6/EL7 |
+| Amazon Linux | **not working** -- no package repository |
+
+The last two were already broken upstream and are not addressed here.
+
+How to install
 ----------------------------
-Connect to your server as root via SSH
-```bash
-ssh root@your.server
-```
 
-Clone this repository and run the installer for your OS from `install/`:
+Connect to your server as root and run the installer for your OS:
+
 ```bash
-git clone https://github.com/outroll/vesta.git
+git clone https://github.com/Dennis-SEG/vesta.git
 cd vesta/install
-sudo ./vst-install-ubuntu.sh   # or vst-install-debian.sh / vst-install-rhel.sh / vst-install-amazon.sh / vst-install-alpine.sh
+sudo GITHUB_REPO=Dennis-SEG/vesta bash vst-install-ubuntu.sh
 ```
 
-Run the script with `--help` to see the available options (admin email/password,
-which services to install, etc).
+Use `vst-install-debian.sh` or `vst-install-alpine.sh` as appropriate, and
+`--help` for the available options (admin email/password, which services to
+install).
 
-> Older versions of this README pointed to `curl https://vestacp.com/pub/vst-install.sh`.
-> That endpoint is hosted separately from this repository and won't reflect any
-> changes made here -- always install from a checkout of this repo instead.
+`GITHUB_REPO` tells the installer which repository's GitHub Releases to pull
+the `vesta`, `vesta-nginx`, `vesta-php` and `vesta-ioncube` packages from. It
+defaults to `outroll/vesta`, which currently publishes no release assets, so
+the override is required until upstream tags a release.
+
+What is fixed here
+----------------------------
+
+- **Login worked on no modern distribution.** `chpasswd` follows PAM, which
+  defaults to yescrypt on Debian 11+ and Ubuntu 22.04+, and PHP's `crypt()`
+  cannot verify a `$y$` hash. Installs completed, services ran, the panel
+  answered -- and every login was refused.
+- **Ubuntu 20.04/22.04 were listed as supported but not installable**; their
+  config trees were in a layout the canonical installer does not read.
+- **Debian has been broken since Debian 10** -- the release was derived with
+  `grep -o [0-9] | head -n1`, so "11.11" became "1". Debian also ships no
+  MySQL server, so the database path now uses MariaDB.
+- **The published packages could not be installed on Debian 11**, because they
+  were zstd-compressed and Debian's dpkg only understands that from 1.21.
+- **`bin/v-update-sys-ip` wrote an unvalidated HTTP response into the NAT
+  configuration on every boot.** This affects existing installations.
+- **The panel served a UI three major React versions behind its own source.**
 
 License
 ----------------------------
